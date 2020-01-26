@@ -1,0 +1,19 @@
+$noop(
+########################################################################
+#                                                                      #
+#  Auto Pad Disc and Track Numbers                         2020-01-24  #
+#  Bob Swift [rdswift]                                                 #
+#                                                                      #
+#  License: GPLv3.0                                                    #
+#                                                                      #
+########################################################################
+#                                                                      #
+#  Automatically pads the disc and track numbers to the length of the  #
+#  total number of discs and tracks.  Padded numbers are provided in   #
+#  the hidden tags _PaddedDiscNum and _PaddedTrackNum.                 #
+#                                                                      #
+########################################################################
+)
+
+$set(_PaddedDiscNum,$num($if2(%discnumber%,1),$len($if2(%totaldiscs%,1))))
+$set(_PaddedTrackNum,$num($if2(%totaltracks%,1),$len($if2(%totaltracks%,1))))
