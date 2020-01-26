@@ -1,6 +1,4 @@
-# picard-scripts
-
-Naming scripts, utility scripts, script functions and snippets for MusicBrainz Picard
+# Picard Scripts
 
 ## Description
 
