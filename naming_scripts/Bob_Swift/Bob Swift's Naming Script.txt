@@ -1,7 +1,7 @@
 $noop(
 #######################################################################
 #
-#  Picard File Naming Script                               2020-01-24
+#  Picard File Naming Script                               2020-01-27
 #  Bob Swift [rdswift]
 #
 #  License: GPLv3.0
@@ -165,7 +165,7 @@ $noop(
 -----------------------------------------------------------------------
 )
 $set(_PaddedDiscNum,$num($if2(%discnumber%,1),$len($if2(%totaldiscs%,1))))
-$set(_PaddedTrackNum,$num($if2(%totaltracks%,1),$len($if2(%totaltracks%,1))))
+$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),$len($if2(%totaltracks%,1))))
 $set(_nYear,[$left($if2(%originaldate%,%originalyear%,%date%,0000),4)])
 $set(_nTNum,$if($gt(%_nTotalDiscs%,1),%_PaddedDiscNum%-,)%_PaddedTrackNum%)
 

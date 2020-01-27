@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Auto Pad Disc and Track Numbers                         2020-01-24  #
+#  Auto Pad Disc and Track Numbers                         2020-01-27  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -16,4 +16,4 @@ $noop(
 )
 
 $set(_PaddedDiscNum,$num($if2(%discnumber%,1),$len($if2(%totaldiscs%,1))))
-$set(_PaddedTrackNum,$num($if2(%totaltracks%,1),$len($if2(%totaltracks%,1))))
+$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),$len($if2(%totaltracks%,1))))
