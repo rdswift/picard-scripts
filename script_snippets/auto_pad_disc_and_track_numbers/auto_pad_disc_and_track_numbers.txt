@@ -1,19 +1,39 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Auto Pad Disc and Track Numbers                         2020-01-27  #
+#  Auto Pad Disc and Track Numbers                         2020-01-28  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
 #                                                                      #
 ########################################################################
 #                                                                      #
-#  Automatically pads the disc and track numbers to the length of the  #
-#  total number of discs and tracks.  Padded numbers are provided in   #
-#  the hidden tags _PaddedDiscNum and _PaddedTrackNum.                 #
+#  Automatically pads the disc and track numbers to the greater of     #
+#  the length of the total number of discs and tracks and a minimum    #
+#  specified length.  Padded numbers are provided in the hidden tags   #
+#  _PaddedDiscNum and _PaddedTrackNum.                                 #
 #                                                                      #
 ########################################################################
 )
 
-$set(_PaddedDiscNum,$num($if2(%discnumber%,1),$len($if2(%totaldiscs%,1))))
-$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),$len($if2(%totaltracks%,1))))
+$noop(
+------------------------------------------------------------------------
+-  Set the minimum padded lengths for disc and track numbers.          -
+------------------------------------------------------------------------
+)
+$set(_PaddedDiscNumMinLength,1)
+$set(_PaddedTrackNumMinLength,2)
+
+$noop(
+------------------------------------------------------------------------
+-  Calculate the maximum lengths for disc and track numbers and set    -
+-  the desired padding lengths.                                        -
+------------------------------------------------------------------------
+)
+$set(_TotalDiscNumberLength,$len($if2(%totaldiscs%,1)))
+$set(_TotalTrackNumberLength,$len($if2(%totaltracks%,1)))
+$set(_DiscPadLength,$if($gt(%_TotalDiscNumberLength%,%_PaddedDiscNumMinLength%),%_TotalDiscNumberLength%,%_PaddedDiscNumMinLength%))
+$set(_TrackPadLength,$if($gt(%_TotalTrackNumberLength%,%_PaddedTrackNumMinLength%),%_TotalTrackNumberLength%,%_PaddedTrackNumMinLength%))
+
+$set(_PaddedDiscNum,$num($if2(%discnumber%,1),%_DiscPadLength%))
+$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),%_TrackPadLength%))

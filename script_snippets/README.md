@@ -4,4 +4,4 @@ Following is a list of the script snippets available, along with a brief descrip
 
 ## auto_pad_disc_and_track_numbers
 
-This snippet would be used in a naming script to automatically pad the disc and track numbers to match the length of the highest disc or track number.
+This snippet would be used in a naming script to automatically pad the disc and track numbers to match the length of the highest disc or track number.  Minimum lengths for disc and track numbers can be specified.

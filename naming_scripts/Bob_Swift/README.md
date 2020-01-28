@@ -3,7 +3,7 @@
 ```txt
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2020-01-24  #
+#  Picard File Naming Script                               2020-01-28  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -32,10 +32,10 @@ Formats: /~ A ~/Album Artist/[year] Album/Disc-Track Title [feat.]
          /[Unknown Artists]/[year] Album/Disc-Track Title [Artist]
 ```
 
-Album and track names used to create directories and tracks are automatically trimmed if they are longer than the maximum lengths set in the "Constants" section of the script.
+Album and track names used to create directories and tracks are automatically trimmed if they are longer than the maximum lengths set in the "User Settings" section of the script.
 
 If the credited primary album artist is different from the standard primary track artist [other than prefix] it will be shown in the track file name.  Any additional credited track artists will be shown in the track file name.
 
-The disc number will be shown for releases containing multiple discs.  All disc and track numbers will be automatically padded to match the length of the highest disc or track number.
+The disc number will be shown for releases containing multiple discs.  All disc and track numbers will be automatically padded to match the length of the highest disc or track number, with a minimum length specified in the "User Settings" section of the script.
 
 This script relies on inputs provided by the ***Additional Artists Variables*** plugin.  This plugin is freely available for use under GPL-2.0 or later, and the latest version can be downloaded from the [author's repository](https://github.com/rdswift/picard-plugins/tree/2.0_RDS_Plugins/plugins/additional_artists_variables) or from the [Picard Plugins](https://picard.musicbrainz.org/plugins/) page.

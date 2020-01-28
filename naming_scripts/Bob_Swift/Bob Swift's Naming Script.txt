@@ -1,12 +1,12 @@
 $noop(
-#######################################################################
-#
-#  Picard File Naming Script                               2020-01-27
-#  Bob Swift [rdswift]
-#
-#  License: GPLv3.0
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Picard File Naming Script                               2020-01-28  #
+#  Bob Swift [rdswift]                                                 #
+#                                                                      #
+#  License: GPLv3.0                                                    #
+#                                                                      #
+########################################################################
 #
 #  This script relies on inputs provided by the "Additional Artists
 #  Variables" plugin.  This plugin is freely available for use under
@@ -47,15 +47,15 @@ $noop(
 #      _artists_track_all_sort_primary - The primary / first track artist listed [sort name] followed by all additional track artists [standardized], separated with strings provided from the track entry
 #      _artists_track_all_count - The number of artists listed as track artists
 #
-#######################################################################
-#
-#  For tagging and filing classical music using the Classical file
-#  naming scheme, a user script must be enabled that sets the
-#  _isClassical processing flag.  This script can be a single line:
-#
-#    $set(_isClassical,1)
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  For tagging and filing classical music using the Classical file     #
+#  naming scheme, a user script must be enabled that sets the          #
+#  _isClassical processing flag.  This script can be a single line:    #
+#                                                                      #
+#    $set(_isClassical,1)                                              #
+#                                                                      #
+########################################################################
 )
 
 $noop(Test Values
@@ -65,11 +65,25 @@ $noop(Test Values
 
 
 $noop(
-#######################################################################
-#
-#  Constants
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  User Settings                                                       #
+#                                                                      #
+########################################################################
+)
+$set(_PaddedDiscNumMinLength,1)
+$set(_PaddedTrackNumMinLength,2)
+$set(_aTitleMaxLength,65)
+$set(_tTitleMaxLength,65)
+$set(_tFilenameMaxLength,120)
+
+
+$noop(
+########################################################################
+#                                                                      #
+#  Constants                                                           #
+#                                                                      #
+########################################################################
 )
 $set(_cUnknownArtistID,125ec42a-7229-4250-afc5-e057484327fe)
 $set(_cVariousArtistID,89ad4ac3-39f7-470e-963a-56509c546377)
@@ -80,17 +94,25 @@ $set(_cNoTitle,[Unknown Title])
 $set(_cClassical,[Classical])
 $set(_cSoundtrack,[Soundtracks])
 $set(_cSingles,[~Singles~])
-$set(_aTitleMaxLength,65)
-$set(_tTitleMaxLength,65)
-$set(_tFilenameMaxLength,120)
 
 
 $noop(
-#######################################################################
-#
-#  Defaults if "Additional Artists Variables" plugin not loaded or metadata is missing
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  RegEx Constants                                                     #
+#                                                                      #
+########################################################################
+)
+$set(_reCaseInsensitive,\(?i\))
+
+
+$noop(
+########################################################################
+#                                                                      #
+#  Defaults if "Additional Artists Variables" plugin not loaded or     #
+#  metadata is missing                                                 #
+#                                                                      #
+########################################################################
 )
 $set(_nFAA,$if2(%_artists_album_all_std%,%albumartist%,%_cUnknownArtist%))
 $set(_nPAA,$if2(%_artists_album_primary_std%,%albumartist%,%_cUnknownArtist%))
@@ -109,32 +131,22 @@ $set(_nTN,$if2(%title%,%_cNoTitle%))
 $set(_nTNT,$if2(%title%,%_cNoTitle%))
 
 $noop(
------------------------------------------------------------------------
--  Trim the album and track names used to create directories and tracks
--  if they are longer than the maximum lengths set in the "Constants"
--  section.
------------------------------------------------------------------------
+------------------------------------------------------------------------
+-  Trim the album and track names used to create directories and       -
+-  tracks if they are longer than the maximum lengths set in the       -
+-  "User Settings" section.                                            -
+------------------------------------------------------------------------
 )
 $if($gt($len(%_nANT%),%_aTitleMaxLength%),$set(_nANT,$left(%_nANT%,$sub(%_aTitleMaxLength%,3))...))
 $if($gt($len(%_nTNT%),%_tTitleMaxLength%),$set(_nTNT,$left(%_nTNT%,$sub(%_tTitleMaxLength%,3))...))
 
 
 $noop(
-#######################################################################
-#
-#  RegEx Constants
-#
-#######################################################################
-)
-$set(_reCaseInsensitive,\(?i\))
-
-
-$noop(
-#######################################################################
-#
-#  Initialize Working Variables
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Initialize Working Variables                                        #
+#                                                                      #
+########################################################################
 )
 $set(_nMedia,%media%)
 $set(_nTotalDiscs,$if2(%totaldiscs%,1))
@@ -145,12 +157,12 @@ $set(_nAlbumArtistID,$if2(%musicbrainz_albumartistid%,%_kUnKnownArtistID%))
 $set(_nInitial,~ $upper($firstalphachar(%_nFAAPS%,#)) ~/)
 
 $noop(
------------------------------------------------------------------------
--  If standardized primary album artist is different from credited
--  primary track artist [other than prefix] show in track file name.
--  Otherwise, show any additional credited track artists in track file
--  name.
------------------------------------------------------------------------
+------------------------------------------------------------------------
+-  If standardized primary album artist is different from credited     -
+-  primary track artist [other than prefix] show in track file name.   -
+-  Otherwise, show any additional credited track artists in track      -
+-  file name.                                                          -
+------------------------------------------------------------------------
 )
 $set(_tAlbumArtist,$lower($delprefix(%_nPAA%)))
 $set(_tTrackArtist,$lower($delprefix(%_nPTA%)))
@@ -158,14 +170,27 @@ $if($eq(%_tAlbumArtist%,%_tTrackArtist%),
     $set(_nFeat,$if(%_nATA%, [feat. %_nATA%],)),
     $set(_nFeat, [%_nFTA%])
 )
+
 $noop(
------------------------------------------------------------------------
--  Automatically pad disc and track numbers to the length of the total
--  number of discs and tracks.
------------------------------------------------------------------------
+------------------------------------------------------------------------
+-  Calculate the maximum lengths for disc and track numbers and set    -
+-  the desired padding lengths.                                        -
+------------------------------------------------------------------------
 )
-$set(_PaddedDiscNum,$num($if2(%discnumber%,1),$len($if2(%totaldiscs%,1))))
-$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),$len($if2(%totaltracks%,1))))
+$set(_TotalDiscNumberLength,$len($if2(%totaldiscs%,1)))
+$set(_TotalTrackNumberLength,$len($if2(%totaltracks%,1)))
+$set(_DiscPadLength,$if($gt(%_TotalDiscNumberLength%,%_PaddedDiscNumMinLength%),%_TotalDiscNumberLength%,%_PaddedDiscNumMinLength%))
+$set(_TrackPadLength,$if($gt(%_TotalTrackNumberLength%,%_PaddedTrackNumMinLength%),%_TotalTrackNumberLength%,%_PaddedTrackNumMinLength%))
+
+$noop(
+------------------------------------------------------------------------
+-  Automatically pad disc and track numbers to the length of the       -
+-  total number of discs and tracks.                                   -
+------------------------------------------------------------------------
+)
+$set(_PaddedDiscNum,$num($if2(%discnumber%,1),%_DiscPadLength%))
+$set(_PaddedTrackNum,$num($if2(%tracknumber%,1),%_TrackPadLength%))
+
 $set(_nYear,[$left($if2(%originaldate%,%originalyear%,%date%,0000),4)])
 $set(_nTNum,$if($gt(%_nTotalDiscs%,1),%_PaddedDiscNum%-,)%_PaddedTrackNum%)
 
@@ -214,11 +239,11 @@ $set(_nAlbumType,$if2(%_nAlbumType%,Standard))
 
 
 $noop(
-#######################################################################
-#
-#  Set File Path
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Set File Path                                                       #
+#                                                                      #
+########################################################################
 )
 $if($eq(%_nAlbumType%,Classical),$set(_nFilePath,%_cClassical%/%_nFAAPS%/%_nYear% %_nANT%/))
 $if($eq(%_nAlbumType%,Soundtrack),$set(_nFilePath,%_cSoundtrack%/%_nYear% %_nANT%/))
@@ -232,11 +257,11 @@ $if($eq(%_nAlbumType%,Standard),$if($eq($if2(%musicbrainz_albumartistid%,%_cVari
 
 
 $noop(
-#######################################################################
-#
-#  Set File Name
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Set File Name                                                       #
+#                                                                      #
+########################################################################
 )
 $if($eq(%_nAlbumType%,Classical),$set(_nFileName,%_nTNum%%_nFeat% %_nTNT%))
 $if($eq(%_nAlbumType%,Soundtrack),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
@@ -244,21 +269,21 @@ $if($eq(%_nAlbumType%,Single),$set(_nFileName,%_nYear% %_nTNT%%_nFeat%))
 $if($eq(%_nAlbumType%,Standard),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
 
 $noop(
------------------------------------------------------------------------
--  Trim the file name if it is longer than the maximum length set in
--  the "Constants" section.
------------------------------------------------------------------------
+------------------------------------------------------------------------
+-  Trim the file name if it is longer than the maximum length set in   -
+-  the "User Settings" section.                                        -
+------------------------------------------------------------------------
 )
 $if($gt($len(%_nFileName%),%_tFilenameMaxLength%),$set(_nFileName,$left(%_nFileName%,$sub(%_tFilenameMaxLength%,3))...))
 
 
 $noop(
-#######################################################################
-#
-#  Note that some of these replacements revert back to an underscore
-#  because of processing for Windows compatability.
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Note that some of these replacements revert back to an underscore   #
+#  because of processing for Windows compatability.                    #
+#                                                                      #
+########################################################################
 )
 $noop(
 $set(_fnAlbumArtist,$rreplace(%_fnAlbumArtist%,/,•))
@@ -274,11 +299,11 @@ $set(_wTitle,$rreplace(%_wTitle%,:,ː))
 
 
 $noop(
-#######################################################################
-#
-#  Output the path and file name to use.
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  Output the path and file name to use.                               #
+#                                                                      #
+########################################################################
 )
 
 $noop(
@@ -290,9 +315,9 @@ $rreplace(%_nFilePath%/%_nFileName%,[?*:\\_]+,_)
 
 
 $noop(
-#######################################################################
-#
-#  End of script.
-#
-#######################################################################
+########################################################################
+#                                                                      #
+#  End of script.                                                      #
+#                                                                      #
+########################################################################
 )
