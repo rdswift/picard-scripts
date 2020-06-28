@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2020-01-28  #
+#  Picard File Naming Script                               2020-06-28  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -77,6 +77,11 @@ $set(_aTitleMaxLength,65)
 $set(_tTitleMaxLength,65)
 $set(_tFilenameMaxLength,120)
 
+$set(_aTitleReleaseYear,1)
+$set(_aTitleDisambig,1)
+$set(_aTitleLabel,1)
+$set(_aTitleCatalog,1)
+
 
 $noop(
 ########################################################################
@@ -129,16 +134,6 @@ $set(_nANT,$if2(%album%,%_cUnknownAlbum%))
 
 $set(_nTN,$if2(%title%,%_cNoTitle%))
 $set(_nTNT,$if2(%title%,%_cNoTitle%))
-
-$noop(
-------------------------------------------------------------------------
--  Trim the album and track names used to create directories and       -
--  tracks if they are longer than the maximum lengths set in the       -
--  "User Settings" section.                                            -
-------------------------------------------------------------------------
-)
-$if($gt($len(%_nANT%),%_aTitleMaxLength%),$set(_nANT,$left(%_nANT%,$sub(%_aTitleMaxLength%,3))...))
-$if($gt($len(%_nTNT%),%_tTitleMaxLength%),$set(_nTNT,$left(%_nTNT%,$sub(%_tTitleMaxLength%,3))...))
 
 
 $noop(
@@ -193,6 +188,50 @@ $set(_PaddedTrackNum,$num($if2(%tracknumber%,1),%_TrackPadLength%))
 
 $set(_nYear,[$left($if2(%originaldate%,%originalyear%,%date%,0000),4)])
 $set(_nTNum,$if($gt(%_nTotalDiscs%,1),%_PaddedDiscNum%-,)%_PaddedTrackNum%)
+
+
+$noop(
+------------------------------------------------------------------------
+-  Add disambiguation, release year, label and catalog number to       -
+-  the album title information as available and enabled in the         -
+-  "User Settings" section.                                            -
+------------------------------------------------------------------------
+)
+$set(_nDisambig,$if($and(%_releasecomment%,%_aTitleDisambig%), \(%_releasecomment%\),))
+
+$set(_nTitleExtra,)
+$if(%_aTitleLabel%,$if(%label%,
+        $setmulti(_temp,%label%)
+        $set(_nTitleExtra,$getmulti(%_temp%,0))
+    )
+)
+$if(%_aTitleCatalog%,$if(%catalognumber%,
+        $setmulti(_temp,%catalognumber%)
+        $set(_nTitleExtra,$trim(%_nTitleExtra% $getmulti(%_temp%,0)))
+    )
+)
+$if(%_aTitleReleaseYear%,$if(%date%,
+        $set(_temp,$left(%date%,4))
+        $if($ne([%_temp%],%_nYear%),
+            $if(%_nTitleExtra%,$set(_nTitleExtra,%_nTitleExtra%\,))
+            $set(_nTitleExtra,$trim(%_nTitleExtra% %_temp%))
+        )
+    )
+)
+$if(%_nTitleExtra%,$set(_nTitleExtra, [%_nTitleExtra%]))
+
+$set(_nANT,%_nANT%%_nDisambig%%_nTitleExtra%)
+
+
+$noop(
+------------------------------------------------------------------------
+-  Trim the album and track names used to create directories and       -
+-  tracks if they are longer than the maximum lengths set in the       -
+-  "User Settings" section.                                            -
+------------------------------------------------------------------------
+)
+$if($gt($len(%_nANT%),%_aTitleMaxLength%),$set(_nANT,$left(%_nANT%,$sub(%_aTitleMaxLength%,3))...))
+$if($gt($len(%_nTNT%),%_tTitleMaxLength%),$set(_nTNT,$left(%_nTNT%,$sub(%_tTitleMaxLength%,3))...))
 
 
 $noop(
