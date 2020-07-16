@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2020-06-28  #
+#  Picard File Naming Script                               2020-07-16  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -77,10 +77,16 @@ $set(_aTitleMaxLength,65)
 $set(_tTitleMaxLength,65)
 $set(_tFilenameMaxLength,120)
 
+$noop(
 $set(_aTitleReleaseYear,1)
 $set(_aTitleDisambig,1)
 $set(_aTitleLabel,1)
 $set(_aTitleCatalog,1)
+)
+$set(_aTitleReleaseYear,)
+$set(_aTitleDisambig,)
+$set(_aTitleLabel,)
+$set(_aTitleCatalog,)
 
 
 $noop(
@@ -263,15 +269,16 @@ $set(_t1,%_t1%$if($lte(%_nTotalTracks%,1),Y,N))
 $set(_t1,%_t1%$if($in(%_primaryreleasetype%,single),Y,N))
 $if($eq(%_t1%,1=YYY),$set(_nAlbumType,Single))
 
-$noop($if($and($eq($if2(%_nAlbumArtistID%,%_cVariousArtistID%),%_cVariousArtistID%),$in(%_secondaryreleasetype%,soundtrack)),$set(_nAlbumType,$if2(%_nAlbumType%,Soundtrack))))
+$noop(
 $set(_t2,2=)
 $set(_t2,%_t2%$if($eq(%_nAlbumArtistID%,%_cVariousArtistID%),Y,N))
 $set(_t2,%_t2%$if($in(%_secondaryreleasetype%,soundtrack),Y,N))
 $if($eq(%_t2%,2=YY),$set(_nAlbumType,Soundtrack))
-
-
-$noop($set(_nYear,%_nYear% [%_t1%\,%_t2%]))
-
+)
+$if($in(%_secondaryreleasetype%,soundtrack),
+    $set(_nAlbumType,Soundtrack)
+    $set(_nFeat, [%_nFTA%])
+)
 
 $if(%_isClassical%,$set(_nAlbumType,$if2(%_nAlbumType%,Classical)))
 $set(_nAlbumType,$if2(%_nAlbumType%,Standard))
@@ -306,6 +313,7 @@ $if($eq(%_nAlbumType%,Classical),$set(_nFileName,%_nTNum%%_nFeat% %_nTNT%))
 $if($eq(%_nAlbumType%,Soundtrack),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
 $if($eq(%_nAlbumType%,Single),$set(_nFileName,%_nYear% %_nTNT%%_nFeat%))
 $if($eq(%_nAlbumType%,Standard),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
+
 
 $noop(
 ------------------------------------------------------------------------
