@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2020-07-16  #
+#  Picard File Naming Script                               2020-11-15  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -105,6 +105,7 @@ $set(_cNoTitle,[Unknown Title])
 $set(_cClassical,[Classical])
 $set(_cSoundtrack,[Soundtracks])
 $set(_cSingles,[~Singles~])
+$set(_cOther,[Other])
 
 
 $noop(
@@ -243,10 +244,13 @@ $if($gt($len(%_nTNT%),%_tTitleMaxLength%),$set(_nTNT,$left(%_nTNT%,$sub(%_tTitle
 $noop(
 #######################################################################
 #
-#  Set Album Type [Single, Soundtrack, Classical or Standard]
+#  Set Album Type [Single, Soundtrack, Classical, Other or Standard]
 #
 #  Process as Classical
 #	Format: /[Classical]/Album Artist/[year] Album/Disc-Track [Composer] Title
+#
+#  Process as Other
+#	Format: /[Other]/[year] Album/Disc-Track Title [Artist]
 #
 #  Process as Soundtrack
 #	Format: /[Soundtrack]/[year] Album/Disc-Track Title [Artist]
@@ -280,7 +284,15 @@ $if($in(%_secondaryreleasetype%,soundtrack),
     $set(_nFeat, [%_nFTA%])
 )
 
-$if(%_isClassical%,$set(_nAlbumType,$if2(%_nAlbumType%,Classical)))
+$if($in(%releasetype%,other),
+    $set(_nAlbumType,Other)
+    $set(_nFeat, [%_nFTA%])
+)
+
+$if(%_isClassical%,
+    $set(_nAlbumType,Classical)
+    $set(_nFeat, [%_nPTA%])
+)
 $set(_nAlbumType,$if2(%_nAlbumType%,Standard))
 
 
@@ -291,8 +303,12 @@ $noop(
 #                                                                      #
 ########################################################################
 )
+$noop(
 $if($eq(%_nAlbumType%,Classical),$set(_nFilePath,%_cClassical%/%_nFAAPS%/%_nYear% %_nANT%/))
+)
+$if($eq(%_nAlbumType%,Classical),$set(_nFilePath,%_cClassical%/%_nYear% %_nANT%/))
 $if($eq(%_nAlbumType%,Soundtrack),$set(_nFilePath,%_cSoundtrack%/%_nYear% %_nANT%/))
+$if($eq(%_nAlbumType%,Other),$set(_nFilePath,%_cOther%/%_nYear% %_nANT%/))
 $if($eq(%_nAlbumType%,Single),$set(_nFilePath,%_nInitial%/%_nPAAS%/%_cSingles%/))
 $if($eq(%_nAlbumType%,Standard),$if($eq($if2(%musicbrainz_albumartistid%,%_cVariousArtistID%),%_cVariousArtistID%),
     $set(_nFilePath,%_cVariousArtist%/%_nYear% %_nANT%/),
@@ -311,6 +327,7 @@ $noop(
 )
 $if($eq(%_nAlbumType%,Classical),$set(_nFileName,%_nTNum%%_nFeat% %_nTNT%))
 $if($eq(%_nAlbumType%,Soundtrack),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
+$if($eq(%_nAlbumType%,Other),$set(_nFileName,%_nTNum% %_nTNT%))
 $if($eq(%_nAlbumType%,Single),$set(_nFileName,%_nYear% %_nTNT%%_nFeat%))
 $if($eq(%_nAlbumType%,Standard),$set(_nFileName,%_nTNum% %_nTNT%%_nFeat%))
 
