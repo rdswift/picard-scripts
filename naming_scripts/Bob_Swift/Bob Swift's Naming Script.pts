@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2022-07-11  #
+#  Picard File Naming Script                               2022-10-14  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -38,14 +38,6 @@ $noop(
 #      _artists_track_all_cred - All track artists listed              #
 #               [as credited], separated with strings provided from    #
 #               the track entry                                        #
-#                                                                      #
-########################################################################
-#                                                                      #
-#  For tagging and filing classical music using the Classical file     #
-#  naming scheme, a user script must be enabled that sets the          #
-#  _isClassical processing flag.  This script can be a single line:    #
-#                                                                      #
-#    $set(_isClassical,1)                                              #
 #                                                                      #
 ########################################################################
 )
@@ -355,18 +347,19 @@ $if($in(%releasetype%,other),
 
 $noop(
 ------------------------------------------------------------------------
--  Set to "Classical" if the %_isClassical% variable is set.  Also     -
--  add the composer or primary track artist to the track title.        -
+-  Set to "Classical" if one of the genres is 'Classical' and the      -
+-  album type is not already set.  Also add the composer or primary    -
+-  track artist to the track title.                                    -
 ------------------------------------------------------------------------
 )
-$if(%_isClassical%,
+$if($and($in(%genre%,Classical),$not(%_nAlbumType%)),
     $set(_nAlbumType,Classical)
     $set(_nFeat, [$if2(%TrackComposer%,%_nPTA%)])
 )
 
 $noop(
 ------------------------------------------------------------------------
--  Set to "Standard" if not processing type is not already set.        -
+-  Set to "Standard" if processing type is not already set.            -
 ------------------------------------------------------------------------
 )
 $set(_nAlbumType,$if2(%_nAlbumType%,Standard))
@@ -435,7 +428,6 @@ $noop(
 ------------------------------------------------------------------------
 )
 $if($gt($len(%_nFileName%),%_tFilenameMaxLength%),$set(_nFileName,$left(%_nFileName%,$sub(%_tFilenameMaxLength%,3))...))
-
 
 
 $noop(

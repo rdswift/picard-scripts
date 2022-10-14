@@ -3,7 +3,7 @@
 ```txt
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2020-01-28  #
+#  Picard File Naming Script                               2022-10-14  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -11,7 +11,7 @@
 ########################################################################
 ```
 
-This script uses different file naming templates for different types of releases: classical; soundtrack; single; and standard.  Standard releases use different templates depending on whether or not they are Various Artists compilations.  Template selection is performed automatically except for classical, which relies on a hidden tag being set in a separate tagging script.  This script can be a single line: `$set(_isClassical,1)`.
+This script uses different file naming templates for different types of releases: classical; soundtrack; single; and standard.  Standard releases use different templates depending on whether or not they are Various Artists compilations.  Template selection is performed automatically based on release type settings except for classical, which is based on whether or not one of the assigned genres is 'Classical'.
 
 Format templates are:
 
