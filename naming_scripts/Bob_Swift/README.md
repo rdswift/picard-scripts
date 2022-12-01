@@ -3,7 +3,7 @@
 ```txt
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2022-10-14  #
+#  Picard File Naming Script                               2022-12-01  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
