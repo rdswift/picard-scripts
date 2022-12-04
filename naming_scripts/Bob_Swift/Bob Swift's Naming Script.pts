@@ -1,7 +1,7 @@
 $noop(
 ########################################################################
 #                                                                      #
-#  Picard File Naming Script                               2022-12-02  #
+#  Picard File Naming Script                               2022-12-03  #
 #  Bob Swift [rdswift]                                                 #
 #                                                                      #
 #  License: GPLv3.0                                                    #
@@ -73,6 +73,8 @@ $noop(
 #                for each music file extension processed               #
 #  _aNoArtistSort - Do not sort the album artist name in the file      #
 #                path rather than the default of sorted                #
+#  _aSortOnFirstName - Sort / group based on album artist first name   #
+#                rather than the default last name                     #
 #                                                                      #
 ########################################################################
 )
@@ -88,6 +90,7 @@ $set(_aTitleLabel,)
 $set(_aTitleCatalog,)
 $set(_aExtension,)
 $set(_aNoArtistSort,)
+$set(_aSortOnFirstName,)
 
 
 $noop(
@@ -225,7 +228,7 @@ $set(_nDiscNum,$if2(%discnumber%,1))
 $set(_nTotalTracks,$if2(%totaltracks%,1))
 $set(_nTrackNum,$if2(%tracknumber%,1))
 $set(_nAlbumArtistID,$if2(%musicbrainz_albumartistid%,%_kUnKnownArtistID%))
-$set(_nInitial,~ $upper($firstalphachar(%_nFAAPS%,#)) ~/)
+$set(_nInitial,~ $upper($firstalphachar($if(%_aSortOnFirstName%,$delprefix(%_nPAA%),%_nFAAPS%),#)) ~/)
 
 $noop(
 ------------------------------------------------------------------------
