@@ -346,7 +346,7 @@ $noop(
 -  'soundtrack'.  Also add the track artist to the track title.        -
 ------------------------------------------------------------------------
 )
-$if($in(%_secondaryreleasetype%,soundtrack),
+$if($in(releasetype%,soundtrack),
     $set(_nAlbumType,Soundtrack)
     $set(_nFeat, [%_nFTA%])
 )
