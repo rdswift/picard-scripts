@@ -227,7 +227,7 @@ $set(_nTotalDiscs,$if2(%totaldiscs%,1))
 $set(_nDiscNum,$if2(%discnumber%,1))
 $set(_nTotalTracks,$if2(%totaltracks%,1))
 $set(_nTrackNum,$if2(%tracknumber%,1))
-$set(_nAlbumArtistID,$if2(%musicbrainz_albumartistid%,%_kUnKnownArtistID%))
+$set(_nAlbumArtistID,$if2(%musicbrainz_albumartistid%,%_cUnknownArtistID%))
 $set(_nInitial,~ $upper($firstalphachar($if(%_aSortOnFirstName%,$delprefix(%_nPAA%),%_nFAAPS%),#)) ~/)
 
 $noop(
